@@ -20,6 +20,13 @@ namespace WebAtividadeEntrevista.Models
         public string CEP { get; set; }
 
         /// <summary>
+        /// CEP
+        /// </summary>
+        [Required]
+        [StringLength(14, MinimumLength = 14, ErrorMessage = "O CPF deve ter exatamente 14 caracteres.")]
+        public string CPF { get; set; }
+
+        /// <summary>
         /// Cidade
         /// </summary>
         [Required]
