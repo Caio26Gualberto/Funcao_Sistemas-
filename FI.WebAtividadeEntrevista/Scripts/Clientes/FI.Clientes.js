@@ -1,5 +1,12 @@
 ﻿
 $(document).ready(function () {
+    $('#CPF').on('keydown', function () {
+        var cpf = $(this).val().replace(/\D/g, '');
+        cpf = cpf.replace(/^(\d{3})(\d)/, '$1.$2');
+        cpf = cpf.replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3');
+        cpf = cpf.replace(/\.(\d{3})(\d)/, '.$1-$2');
+        $(this).val(cpf);
+    });
     $('#formCadastro').submit(function (e) {
         e.preventDefault();
         $.ajax({
@@ -8,6 +15,7 @@ $(document).ready(function () {
             data: {
                 "NOME": $(this).find("#Nome").val(),
                 "CEP": $(this).find("#CEP").val(),
+                "CPF": $(this).find("#CPF").val(),
                 "Email": $(this).find("#Email").val(),
                 "Sobrenome": $(this).find("#Sobrenome").val(),
                 "Nacionalidade": $(this).find("#Nacionalidade").val(),
@@ -29,8 +37,7 @@ $(document).ready(function () {
                 $("#formCadastro")[0].reset();
             }
         });
-    })
-    
+    })    
 })
 
 function ModalDialog(titulo, texto) {
