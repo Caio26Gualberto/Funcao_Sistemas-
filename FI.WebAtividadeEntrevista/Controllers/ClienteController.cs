@@ -38,7 +38,14 @@ namespace WebAtividadeEntrevista.Controllers
             }
             else
             {
-                
+                bool cpfExiste = bo.VerificarExistencia(model.CPF);
+
+                if (cpfExiste)
+                {
+                    Response.StatusCode = 400;
+                    return Json("CPF já cadastrado");
+                }
+
                 model.Id = bo.Incluir(new Cliente()
                 {                    
                     CEP = model.CEP,
@@ -74,10 +81,19 @@ namespace WebAtividadeEntrevista.Controllers
             }
             else
             {
+                bool cpfExiste = bo.VerificarExistencia(model.CPF);
+
+                if (cpfExiste)
+                {
+                    Response.StatusCode = 400;
+                    return Json("CPF já cadastrado");
+                }
+
                 bo.Alterar(new Cliente()
                 {
                     Id = model.Id,
                     CEP = model.CEP,
+                    CPF = model.CPF,
                     Cidade = model.Cidade,
                     Email = model.Email,
                     Estado = model.Estado,
@@ -105,6 +121,7 @@ namespace WebAtividadeEntrevista.Controllers
                 {
                     Id = cliente.Id,
                     CEP = cliente.CEP,
+                    CPF = cliente.CPF,
                     Cidade = cliente.Cidade,
                     Email = cliente.Email,
                     Estado = cliente.Estado,

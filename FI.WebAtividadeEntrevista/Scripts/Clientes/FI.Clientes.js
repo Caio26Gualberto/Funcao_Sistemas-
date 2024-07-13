@@ -1,11 +1,18 @@
 ﻿
 $(document).ready(function () {
-    $('#CPF').on('keydown', function () {
+    $('#CPF').on('keydown', function (e) {
         var cpf = $(this).val().replace(/\D/g, '');
         cpf = cpf.replace(/^(\d{3})(\d)/, '$1.$2');
         cpf = cpf.replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3');
         cpf = cpf.replace(/\.(\d{3})(\d)/, '.$1-$2');
         $(this).val(cpf);
+    });
+
+    $('#CPF').on('keypress', function (e) {
+        var charCode = e.which ? e.which : e.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            e.preventDefault();
+        }
     });
     $('#formCadastro').submit(function (e) {
         e.preventDefault();
@@ -25,19 +32,19 @@ $(document).ready(function () {
                 "Telefone": $(this).find("#Telefone").val()
             },
             error:
-            function (r) {
-                if (r.status == 400)
-                    ModalDialog("Ocorreu um erro", r.responseJSON);
-                else if (r.status == 500)
-                    ModalDialog("Ocorreu um erro", "Ocorreu um erro interno no servidor.");
-            },
+                function (r) {
+                    if (r.status == 400)
+                        ModalDialog("Ocorreu um erro", r.responseJSON);
+                    else if (r.status == 500)
+                        ModalDialog("Ocorreu um erro", "Ocorreu um erro interno no servidor.");
+                },
             success:
-            function (r) {
-                ModalDialog("Sucesso!", r)
-                $("#formCadastro")[0].reset();
-            }
+                function (r) {
+                    ModalDialog("Sucesso!", r)
+                    $("#formCadastro")[0].reset();
+                }
         });
-    })    
+    })
 })
 
 function ModalDialog(titulo, texto) {

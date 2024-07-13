@@ -1,8 +1,24 @@
 ﻿
 $(document).ready(function () {
+    $('#CPF').on('keydown', function (e) {
+        var cpf = $(this).val().replace(/\D/g, '');
+        cpf = cpf.replace(/^(\d{3})(\d)/, '$1.$2');
+        cpf = cpf.replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3');
+        cpf = cpf.replace(/\.(\d{3})(\d)/, '.$1-$2');
+        $(this).val(cpf);
+    });
+
+    $('#CPF').on('keypress', function (e) {
+        var charCode = e.which ? e.which : e.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            e.preventDefault();
+        }
+    });
+
     if (obj) {
         $('#formCadastro #Nome').val(obj.Nome);
         $('#formCadastro #CEP').val(obj.CEP);
+        $('#formCadastro #CPF').val(obj.CPF);
         $('#formCadastro #Email').val(obj.Email);
         $('#formCadastro #Sobrenome').val(obj.Sobrenome);
         $('#formCadastro #Nacionalidade').val(obj.Nacionalidade);
@@ -21,6 +37,7 @@ $(document).ready(function () {
             data: {
                 "NOME": $(this).find("#Nome").val(),
                 "CEP": $(this).find("#CEP").val(),
+                "CPF": $(this).find("#CPF").val(),
                 "Email": $(this).find("#Email").val(),
                 "Sobrenome": $(this).find("#Sobrenome").val(),
                 "Nacionalidade": $(this).find("#Nacionalidade").val(),
