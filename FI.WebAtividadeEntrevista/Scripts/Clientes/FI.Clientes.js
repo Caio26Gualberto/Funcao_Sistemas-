@@ -14,6 +14,7 @@ $(document).ready(function () {
             e.preventDefault();
         }
     });
+
     $('#formCadastro').submit(function (e) {
         e.preventDefault();
         $.ajax({
