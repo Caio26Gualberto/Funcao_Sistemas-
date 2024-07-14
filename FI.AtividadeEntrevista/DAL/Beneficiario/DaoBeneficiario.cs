@@ -52,7 +52,7 @@ namespace FI.AtividadeEntrevista.DAL
 
             parametros.Add(new System.Data.SqlClient.SqlParameter("CPF", CPF));
 
-            DataSet ds = base.Consultar("FI_SP_ConsBeneficiario", parametros);
+            DataSet ds = base.Consultar("FI_SP_VerificaBeneficiario", parametros);
 
             return ds.Tables[0].Rows.Count > 0;
         }

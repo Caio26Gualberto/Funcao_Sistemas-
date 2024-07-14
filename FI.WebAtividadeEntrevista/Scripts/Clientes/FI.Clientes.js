@@ -18,7 +18,7 @@ $(document).ready(function () {
     $('#formCadastro').submit(function (e) {
         e.preventDefault();
         $.ajax({
-            url: urlPost,
+            url: urlPostCliente,
             method: "POST",
             data: {
                 "NOME": $(this).find("#Nome").val(),
@@ -41,8 +41,32 @@ $(document).ready(function () {
                 },
             success:
                 function (r) {
-                    ModalDialog("Sucesso!", r)
-                    $("#formCadastro")[0].reset();
+                    debugger
+                    var clienteId = r.ClienteId;
+                    var beneficiariosSalvos = JSON.parse($('#beneficiariosSalvos').val());
+                    beneficiariosSalvos.forEach(function (beneficiario) {
+                        beneficiario.idCliente = clienteId;
+                    });
+
+                    $.ajax({
+                        url: urlPostBeneficiario,
+                        method: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify(beneficiariosSalvos),
+                        error:
+                            function (r) {
+                                if (r.status == 400)
+                                    ModalDialog("Ocorreu um erro", r.responseJSON);
+                                else if (r.status == 500)
+                                    ModalDialog("Ocorreu um erro", "Ocorreu um erro interno no servidor.");
+                            },
+                        success:
+                            function (r) {
+
+                                ModalDialog("Sucesso!", r)
+                                $("#formCadastro")[0].reset();
+                            }
+                    });
                 }
         });
     })

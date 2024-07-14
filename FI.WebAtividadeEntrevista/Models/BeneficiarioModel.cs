@@ -26,6 +26,7 @@ namespace FI.WebAtividadeEntrevista.Models
         /// <summary>
         /// Identificador único que liga o beneficiário ao cliente
         /// </summary>
+        [Required]
         public long IdCliente { get; set; }
     }
 }
