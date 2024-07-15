@@ -22,11 +22,5 @@ namespace FI.WebAtividadeEntrevista.Models
         [Required]
         [MaxLength(14, ErrorMessage = "CPF inválido")]
         public string CPF { get; set; }
-
-        /// <summary>
-        /// Identificador único que liga o beneficiário ao cliente
-        /// </summary>
-        [Required]
-        public long IdCliente { get; set; }
     }
 }

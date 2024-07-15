@@ -25,17 +25,6 @@ namespace FI.AtividadeEntrevista.BLL
         }
 
         /// <summary>
-        /// Consulta o beneficiario pelo id
-        /// </summary>
-        /// <param name="id">id do beneficiario</param>
-        /// <returns></returns>
-        public DML.Beneficiario Consultar(long id)
-        {
-            DAL.DaoBeneficiario benef = new DAL.DaoBeneficiario();
-            return benef.Consultar(id);
-        }
-
-        /// <summary>
         /// Excluir o beneficiario pelo id
         /// </summary>
         /// <param name="id">id do beneficiario</param>
@@ -69,10 +58,10 @@ namespace FI.AtividadeEntrevista.BLL
         /// </summary>
         /// <param name="CPF"></param>
         /// <returns></returns>
-        public bool VerificarExistencia(string CPF)
+        public bool VerificarExistencia(string CPF, long id)
         {
             DAL.DaoBeneficiario benef = new DAL.DaoBeneficiario();
-            return benef.VerificarExistencia(CPF);
+            return benef.VerificarExistenciaBeneficiario(CPF, id);
         }
     }
 }

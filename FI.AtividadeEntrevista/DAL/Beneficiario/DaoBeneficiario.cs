@@ -34,25 +34,27 @@ namespace FI.AtividadeEntrevista.DAL
         /// Inclui um novo beneficiario
         /// </summary>
         /// <param name="cliente">Objeto de cliente</param>
-        internal DML.Beneficiario Consultar(long Id)
+        internal List<DML.Beneficiario> ConsultarBeneficiariosPorCliente(long clienteId)
         {
             List<System.Data.SqlClient.SqlParameter> parametros = new List<System.Data.SqlClient.SqlParameter>();
 
-            parametros.Add(new System.Data.SqlClient.SqlParameter("Id", Id));
+            parametros.Add(new System.Data.SqlClient.SqlParameter("Id", clienteId));
 
-            DataSet ds = base.Consultar("FI_SP_ConsBeneficiario", parametros);
+            DataSet ds = base.Consultar("FI_SP_ConsBeneficiarioPorCliente", parametros);
             List<DML.Beneficiario> cli = Converter(ds);
 
-            return cli.FirstOrDefault();
+            return cli;
         }
 
-        internal bool VerificarExistencia(string CPF)
+        internal bool VerificarExistenciaBeneficiario(string CPF, long Id)
         {
-            List<System.Data.SqlClient.SqlParameter> parametros = new List<System.Data.SqlClient.SqlParameter>();
+            List<System.Data.SqlClient.SqlParameter> parametros = new List<System.Data.SqlClient.SqlParameter>
+            {
+                new System.Data.SqlClient.SqlParameter("CPF", CPF),
+                new System.Data.SqlClient.SqlParameter("ID", Id)
+            };
 
-            parametros.Add(new System.Data.SqlClient.SqlParameter("CPF", CPF));
-
-            DataSet ds = base.Consultar("FI_SP_VerificaBeneficiario", parametros);
+            DataSet ds = base.Consultar("FI_SP_VerificaBeneficiarioV2", parametros);
 
             return ds.Tables[0].Rows.Count > 0;
         }

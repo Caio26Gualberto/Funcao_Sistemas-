@@ -26,11 +26,15 @@ $(document).ready(function () {
         $('#formCadastro #Cidade').val(obj.Cidade);
         $('#formCadastro #Logradouro').val(obj.Logradouro);
         $('#formCadastro #Telefone').val(obj.Telefone);
+        $('#formCadastro #beneficiariosSalvos').val(JSON.stringify(obj.Beneficiarios));
     }
 
     $('#formCadastro').submit(function (e) {
         e.preventDefault();
-        
+        var beneficiariosSalvos = $('#beneficiariosSalvos').val();
+        if (beneficiariosSalvos.length > 0) {
+            beneficiariosSalvos = JSON.parse(beneficiariosSalvos)
+        }
         $.ajax({
             url: urlPost,
             method: "POST",
@@ -44,7 +48,8 @@ $(document).ready(function () {
                 "Estado": $(this).find("#Estado").val(),
                 "Cidade": $(this).find("#Cidade").val(),
                 "Logradouro": $(this).find("#Logradouro").val(),
-                "Telefone": $(this).find("#Telefone").val()
+                "Telefone": $(this).find("#Telefone").val(),
+                "Beneficiarios": beneficiariosSalvos
             },
             error:
             function (r) {

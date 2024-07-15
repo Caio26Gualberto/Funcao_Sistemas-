@@ -6,6 +6,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using FI.AtividadeEntrevista.DML;
+using FI.AtividadeEntrevista.Infra;
+using FI.WebAtividadeEntrevista.Models;
 
 namespace WebAtividadeEntrevista.Controllers
 {
@@ -25,44 +27,64 @@ namespace WebAtividadeEntrevista.Controllers
         [HttpPost]
         public JsonResult Incluir(ClienteModel model)
         {
-            BoCliente bo = new BoCliente();
-            
-            if (!this.ModelState.IsValid)
+            try
             {
-                List<string> erros = (from item in ModelState.Values
-                                      from error in item.Errors
-                                      select error.ErrorMessage).ToList();
+                BoCliente boCliente = new BoCliente();
+                BoBeneficiario boBeneficiario = new BoBeneficiario();
 
-                Response.StatusCode = 400;
-                return Json(string.Join(Environment.NewLine, erros));
-            }
-            else
-            {
-                bool cpfExiste = bo.VerificarExistencia(model.CPF);
-
-                if (cpfExiste)
+                if (!this.ModelState.IsValid)
                 {
+                    List<string> erros = (from item in ModelState.Values
+                                          from error in item.Errors
+                                          select error.ErrorMessage).ToList();
+
                     Response.StatusCode = 400;
-                    return Json("CPF já cadastrado");
+                    return Json(string.Join(Environment.NewLine, erros));
                 }
+                else
+                {
+                    var listaDeBeneficiarios = new List<Beneficiario>();
+                    if (model.Beneficiarios != null && model.Beneficiarios[0] != null)
+                    {
+                        listaDeBeneficiarios = model.Beneficiarios.Select(b => new Beneficiario()
+                        {
+                            CPF = b.CPF,
+                            Nome = b.Nome
+                        }).ToList();
+                    }
 
-                model.Id = bo.Incluir(new Cliente()
-                {                    
-                    CEP = model.CEP,
-                    CPF = model.CPF,
-                    Cidade = model.Cidade,
-                    Email = model.Email,
-                    Estado = model.Estado,
-                    Logradouro = model.Logradouro,
-                    Nacionalidade = model.Nacionalidade,
-                    Nome = model.Nome,
-                    Sobrenome = model.Sobrenome,
-                    Telefone = model.Telefone
-                });
+                    model.Id = boCliente.Incluir(new Cliente()
+                    {
+                        CEP = model.CEP,
+                        CPF = model.CPF,
+                        Cidade = model.Cidade,
+                        Email = model.Email,
+                        Estado = model.Estado,
+                        Logradouro = model.Logradouro,
+                        Nacionalidade = model.Nacionalidade,
+                        Nome = model.Nome,
+                        Sobrenome = model.Sobrenome,
+                        Telefone = model.Telefone,
+                        Beneficiarios = listaDeBeneficiarios
+                    });
 
-
-                return Json(new { ClienteId = model.Id });
+                    return Json("Cadastro realizado com sucesso");
+                }
             }
+            catch (ApplicationError ex)
+            {
+                Response.StatusCode = 400;
+                return Json(ex.Message);
+            }
+
+        }
+
+        [HttpGet]
+        public JsonResult Excluir(long id)
+        {
+            BoCliente bo = new BoCliente();
+            bo.Excluir(id);
+            return Json("Cadastro excluído com sucesso", JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -81,12 +103,15 @@ namespace WebAtividadeEntrevista.Controllers
             }
             else
             {
-                bool cpfExiste = bo.VerificarExistencia(model.CPF);
-
-                if (cpfExiste)
+                var listaDeBeneficiarios = new List<Beneficiario>();
+                if (model.Beneficiarios != null)
                 {
-                    Response.StatusCode = 400;
-                    return Json("CPF já cadastrado");
+                    listaDeBeneficiarios = model.Beneficiarios.Select(b => new Beneficiario()
+                    {
+                        Id = b.Id,
+                        CPF = b.CPF,
+                        Nome = b.Nome
+                    }).ToList();
                 }
 
                 bo.Alterar(new Cliente()
@@ -101,7 +126,8 @@ namespace WebAtividadeEntrevista.Controllers
                     Nacionalidade = model.Nacionalidade,
                     Nome = model.Nome,
                     Sobrenome = model.Sobrenome,
-                    Telefone = model.Telefone
+                    Telefone = model.Telefone,
+                    Beneficiarios = listaDeBeneficiarios
                 });
                                
                 return Json("Cadastro alterado com sucesso");
@@ -129,7 +155,13 @@ namespace WebAtividadeEntrevista.Controllers
                     Nacionalidade = cliente.Nacionalidade,
                     Nome = cliente.Nome,
                     Sobrenome = cliente.Sobrenome,
-                    Telefone = cliente.Telefone
+                    Telefone = cliente.Telefone,
+                    Beneficiarios = cliente.Beneficiarios.Select(b => new BeneficiarioModel()
+                    {
+                        Id = b.Id,
+                        CPF = b.CPF,
+                        Nome = b.Nome
+                    }).ToList()
                 };
 
             

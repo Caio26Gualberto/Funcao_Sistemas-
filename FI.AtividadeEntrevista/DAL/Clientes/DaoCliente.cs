@@ -53,13 +53,15 @@ namespace FI.AtividadeEntrevista.DAL
             return cli.FirstOrDefault();
         }
 
-        internal bool VerificarExistencia(string CPF)
+        internal bool VerificarExistencia(string CPF, long id)
         {
-            List<System.Data.SqlClient.SqlParameter> parametros = new List<System.Data.SqlClient.SqlParameter>();
+            List<System.Data.SqlClient.SqlParameter> parametros = new List<System.Data.SqlClient.SqlParameter>
+            {
+                new System.Data.SqlClient.SqlParameter("CPF", CPF),
+                new System.Data.SqlClient.SqlParameter("Id", id)
+            };
 
-            parametros.Add(new System.Data.SqlClient.SqlParameter("CPF", CPF));
-
-            DataSet ds = base.Consultar("FI_SP_VerificaCliente", parametros);
+            DataSet ds = base.Consultar("FI_SP_VerificaClienteV2", parametros);
 
             return ds.Tables[0].Rows.Count > 0;
         }

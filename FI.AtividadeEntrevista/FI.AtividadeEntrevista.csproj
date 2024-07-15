@@ -49,6 +49,7 @@
     <Compile Include="DAL\Padrao\FI.AcessoDados.cs" />
     <Compile Include="DML\Beneficiario.cs" />
     <Compile Include="DML\Cliente.cs" />
+    <Compile Include="Infra\ApplicationError.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

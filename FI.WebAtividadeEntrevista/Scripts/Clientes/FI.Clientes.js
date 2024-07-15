@@ -17,6 +17,10 @@ $(document).ready(function () {
 
     $('#formCadastro').submit(function (e) {
         e.preventDefault();
+        var beneficiariosSalvos = $('#beneficiariosSalvos').val();
+        if (beneficiariosSalvos.length > 0) {
+            beneficiariosSalvos = JSON.parse(beneficiariosSalvos)
+        }
         $.ajax({
             url: urlPostCliente,
             method: "POST",
@@ -30,47 +34,23 @@ $(document).ready(function () {
                 "Estado": $(this).find("#Estado").val(),
                 "Cidade": $(this).find("#Cidade").val(),
                 "Logradouro": $(this).find("#Logradouro").val(),
-                "Telefone": $(this).find("#Telefone").val()
+                "Telefone": $(this).find("#Telefone").val(),
+                "Beneficiarios": beneficiariosSalvos === '' ? null : beneficiariosSalvos
             },
-            error:
-                function (r) {
-                    if (r.status == 400)
-                        ModalDialog("Ocorreu um erro", r.responseJSON);
-                    else if (r.status == 500)
-                        ModalDialog("Ocorreu um erro", "Ocorreu um erro interno no servidor.");
-                },
-            success:
-                function (r) {
-                    debugger
-                    var clienteId = r.ClienteId;
-                    var beneficiariosSalvos = JSON.parse($('#beneficiariosSalvos').val());
-                    beneficiariosSalvos.forEach(function (beneficiario) {
-                        beneficiario.idCliente = clienteId;
-                    });
-
-                    $.ajax({
-                        url: urlPostBeneficiario,
-                        method: "POST",
-                        contentType: "application/json",
-                        data: JSON.stringify(beneficiariosSalvos),
-                        error:
-                            function (r) {
-                                if (r.status == 400)
-                                    ModalDialog("Ocorreu um erro", r.responseJSON);
-                                else if (r.status == 500)
-                                    ModalDialog("Ocorreu um erro", "Ocorreu um erro interno no servidor.");
-                            },
-                        success:
-                            function (r) {
-
-                                ModalDialog("Sucesso!", r)
-                                $("#formCadastro")[0].reset();
-                            }
-                    });
+            error: function (r) {
+                if (r.status == 400) {
+                    ModalDialog("Ocorreu um erro", r.responseJSON);
+                } else if (r.status == 500) {
+                    ModalDialog("Ocorreu um erro", "Ocorreu um erro interno no servidor.");
                 }
+            },
+            success: function (r) {
+                ModalDialog("Sucesso!", r);
+                $("#formCadastro")[0].reset();
+            }
         });
     })
-})
+});
 
 function ModalDialog(titulo, texto) {
     var random = Math.random().toString().replace('.', '');
