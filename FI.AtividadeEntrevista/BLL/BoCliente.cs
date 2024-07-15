@@ -52,6 +52,7 @@ namespace FI.AtividadeEntrevista.BLL
             foreach (var beneficiario in cliente.Beneficiarios)
             {
                 cpfExiste = _daoBeneficiario.VerificarExistenciaBeneficiario(beneficiario.CPF, beneficiario.Id);
+                cpfExiste = this.VerificarExistenciaCliente(beneficiario.CPF, beneficiario.Id);
 
                 if (cpfExiste)
                 {
